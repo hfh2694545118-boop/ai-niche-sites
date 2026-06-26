@@ -615,10 +615,15 @@ function vercelJson() {
   }, null, 2);
 }
 
+function googleVerification() {
+  return "google-site-verification: googled161434a101d9810.html\n";
+}
+
 function generateSite(site) {
   const dir = path.join(outRoot, site.slug);
   cleanDir(dir);
   write(path.join(dir, "index.html"), homePage(site));
+  write(path.join(dir, "googled161434a101d9810.html"), googleVerification());
   write(path.join(dir, "styles.css"), css());
   write(path.join(dir, "about.html"), simplePage(site, "about"));
   write(path.join(dir, "editorial-policy.html"), simplePage(site, "editorial"));
