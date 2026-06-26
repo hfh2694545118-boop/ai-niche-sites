@@ -335,6 +335,29 @@ const articleAngles = [
   "launch checklist"
 ];
 
+const highIntentModifiers = [
+  "best",
+  "pricing",
+  "reviews",
+  "comparison",
+  "alternatives",
+  "for small business",
+  "for agencies",
+  "for ecommerce",
+  "for creators",
+  "for teams",
+  "free trial",
+  "discount",
+  "affiliate program",
+  "vs",
+  "software",
+  "platform",
+  "use cases",
+  "templates",
+  "workflow",
+  "ROI"
+];
+
 function slugify(value) {
   return value
     .toLowerCase()
@@ -389,6 +412,24 @@ function siteArticles(site) {
   });
 }
 
+function highIntentKeywords(site) {
+  return highIntentModifiers.map((modifier, index) => {
+    const tool = site.tools[index % site.tools.length][0];
+    if (modifier === "vs") return `${tool} vs ${site.tools[(index + 1) % site.tools.length][0]}`;
+    return `${modifier} ${site.niche}`;
+  });
+}
+
+function keywordPlan(site) {
+  return highIntentKeywords(site).map((keyword, index) => ({
+    keyword,
+    intent: index < 6 ? "Purchase comparison" : index < 14 ? "Evaluation" : "Implementation",
+    format: index % 4 === 0 ? "Tool comparison page" : index % 4 === 1 ? "Buyer guide" : index % 4 === 2 ? "Alternatives page" : "Workflow article",
+    priority: index < 8 ? "High" : index < 15 ? "Medium" : "Build later",
+    article: siteArticles(site)[index % articleAngles.length]
+  }));
+}
+
 function escapeTitle(value) {
   return value.replace(/\b\w/g, (char) => char.toUpperCase());
 }
@@ -415,7 +456,7 @@ function layout(site, title, description, body, extraHead = "") {
     <header class="site-header">
       <nav class="nav">
         <a class="brand" href="/"><span class="brand-mark">AI</span><span>${escapeHtml(site.name)}<small>${escapeHtml(site.niche)}</small></span></a>
-        <div class="nav-links"><a href="/articles/">Articles</a><a href="/#tools">Tools</a><a href="/affiliate-disclosure.html">Disclosure</a></div>
+        <div class="nav-links"><a href="/articles/">Articles</a><a href="/#tools">Tools</a><a href="/keyword-plan.html">Keyword Plan</a><a href="/affiliate-disclosure.html">Disclosure</a></div>
       </nav>
     </header>
     ${body}
@@ -446,13 +487,20 @@ function homePage(site) {
   }).join("\n");
   const articleCards = articles.slice(0, 8).map((article) => `<a class="article-card" href="/articles/${article.slug}.html"><span>${String(article.index + 1).padStart(2, "0")}</span><strong>${escapeHtml(article.title)}</strong><small>${escapeHtml(article.keyword)}</small></a>`).join("\n");
   const sourceLinks = site.sources.map(([name, url]) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(name)}</a>`).join("");
+  const sponsorCards = site.tools.slice(0, 3).map(([name, desc], index) => `<article class="sponsor-card">
+      <div class="ad-visual"><span>${escapeHtml(name.split(/\s+/).map((word) => word[0]).join("").slice(0, 3))}</span></div>
+      <p class="eyebrow">Sponsored slot ${index + 1}</p>
+      <h3>${escapeHtml(name)} partner placement</h3>
+      <p>${escapeHtml(desc)}</p>
+      <a class="button primary" href="/go/${slugify(name)}.html" rel="sponsored">Try ${escapeHtml(name)}</a>
+    </article>`).join("\n");
   const body = `<main>
     <section class="hero">
       <div>
         <p class="eyebrow">Focused AI niche site</p>
         <h1>${escapeHtml(site.name)} for practical software buyers.</h1>
         <p>${escapeHtml(description)} The site focuses on buying-intent comparisons, real workflows, source-backed notes, and affiliate-ready tool tracking.</p>
-        <div class="actions"><a class="button primary" href="#tools">Browse tools</a><a class="button secondary" href="/articles/">Read 30 guides</a></div>
+        <div class="actions"><a class="button primary" href="#tools">Browse tools</a><a class="button secondary" href="/articles/">Read 30 guides</a><a class="button secondary" href="/keyword-plan.html">See SEO plan</a></div>
       </div>
       <aside class="hero-panel">
         <strong>Launch scope</strong>
@@ -463,7 +511,11 @@ function homePage(site) {
     <section class="ad-slot">
       <span>Affiliate-ready placement</span>
       <strong>Partner slot for ${escapeHtml(site.niche)} vendors</strong>
-      <small>Replace this block with an approved affiliate offer after the program accepts the site.</small>
+      <small>Use this area for approved affiliate offers, newsletter sponsorships, or direct vendor ads. Tool clicks route through /go/ pages so Vercel Analytics can show click interest by page.</small>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="eyebrow">Ad inventory</p><h2>Featured partner placements</h2></div><p>Three above-the-fold sponsor cards ready for affiliate links or direct ad sales.</p></div>
+      <div class="sponsor-grid">${sponsorCards}</div>
     </section>
     <section class="section" id="tools">
       <div class="section-head"><div><p class="eyebrow">Tool directory</p><h2>Compare ${escapeHtml(site.niche)}</h2></div><p>${site.tools.length} tools selected for the first version.</p></div>
@@ -487,6 +539,37 @@ function articleIndex(site) {
   const cards = articles.map((article) => `<a class="article-card" href="/articles/${article.slug}.html"><span>${String(article.index + 1).padStart(2, "0")}</span><strong>${escapeHtml(article.title)}</strong><small>${escapeHtml(article.keyword)}</small></a>`).join("\n");
   const body = `<main class="section"><p class="eyebrow">Article library</p><h1>30 ${escapeHtml(site.niche)} guides</h1><p class="lead">Each article targets a practical buyer question and links back to relevant tools.</p><div class="article-grid">${cards}</div></main>`;
   return layout(site, `Articles | ${site.name}`, `30 English ${site.niche} articles for commercial search and affiliate research.`, body);
+}
+
+function keywordPlanPage(site) {
+  const rows = keywordPlan(site).map((item, index) => `<tr>
+      <td>${index + 1}</td>
+      <td><strong>${escapeHtml(item.keyword)}</strong></td>
+      <td>${escapeHtml(item.intent)}</td>
+      <td>${escapeHtml(item.format)}</td>
+      <td>${escapeHtml(item.priority)}</td>
+      <td><a href="/articles/${item.article.slug}.html">${escapeHtml(item.article.title)}</a></td>
+    </tr>`).join("\n");
+  const monthlyPlan = siteArticles(site).slice(0, 12).map((article, index) => `<li><strong>Week ${Math.floor(index / 3) + 1}:</strong> publish <a href="/articles/${article.slug}.html">${escapeHtml(article.keyword)}</a>, then add one internal link from the homepage or a related guide.</li>`).join("\n");
+  const body = `<main class="article">
+    <p class="eyebrow">SEO roadmap</p>
+    <h1>20 high-intent ${escapeHtml(site.niche)} keywords</h1>
+    <p class="lead">This plan prioritizes keywords with buying signals such as pricing, reviews, alternatives, comparisons, trials, and workflow fit. Use it to decide which pages to improve first after the site starts getting impressions in Google Search Console.</p>
+    <section>
+      <h2>Keyword priority table</h2>
+      <table class="plan-table"><thead><tr><th>#</th><th>Keyword</th><th>Intent</th><th>Recommended page</th><th>Priority</th><th>Current article</th></tr></thead><tbody>${rows}</tbody></table>
+    </section>
+    <section>
+      <h2>30-day publishing rhythm</h2>
+      <ol>${monthlyPlan}</ol>
+    </section>
+    <section>
+      <h2>Monetization notes</h2>
+      <p>Keep editorial articles useful first, then place affiliate calls-to-action only where the reader is already comparing tools. The best first placements are the homepage sponsor cards, the tool directory buttons, and article sections that mention a specific tool by name.</p>
+      <p>Check Vercel Analytics for visits to <code>/go/tool-name.html</code>. Those pageviews are your lightweight click-tracking signal on the free plan.</p>
+    </section>
+  </main>`;
+  return layout(site, `Keyword Plan | ${site.name}`, `20 high-intent ${site.niche} keywords and publishing priorities.`, body);
 }
 
 function articlePage(site, article) {
@@ -574,7 +657,7 @@ function redirectPage(site, tool) {
 }
 
 function css() {
-  return `:root{color-scheme:dark;--bg:#070b14;--panel:#0e1626;--panel2:#121d30;--text:#edf5ff;--muted:#9fb0c3;--line:rgba(255,255,255,.11);--accent:#22d3ee;--radius:10px}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,color-mix(in srgb,var(--accent) 18%,transparent),transparent 32rem),var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.6}a{color:inherit}.site-header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);background:rgba(7,11,20,.82);backdrop-filter:blur(14px)}.nav,.hero,.section,.site-footer,.article{width:min(1120px,calc(100% - 32px));margin:auto}.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 0}.brand{display:flex;gap:12px;align-items:center;text-decoration:none;font-weight:800}.brand small{display:block;color:var(--muted);font-weight:500}.brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#fff);color:#06111f}.nav-links{display:flex;gap:18px;color:var(--muted)}.nav-links a{text-decoration:none}.hero{display:grid;grid-template-columns:1.4fr .8fr;gap:28px;align-items:center;padding:72px 0 34px}.hero h1,.article h1{font-size:clamp(2.2rem,5vw,4.8rem);line-height:1.02;margin:8px 0 18px}.hero p,.lead{font-size:1.08rem;color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.14em;color:var(--accent);font-size:.78rem;font-weight:800}.actions{display:flex;gap:12px;margin-top:24px}.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:999px;padding:10px 16px;text-decoration:none;font-weight:800;background:rgba(255,255,255,.04)}.button.primary{background:var(--accent);color:#06111f;border-color:transparent}.button.secondary{color:var(--text)}.hero-panel,.tool-card,.article-card,.ad-slot,.proof{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));box-shadow:0 24px 70px rgba(0,0,0,.26)}.hero-panel{padding:24px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.chips span{border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--muted)}.ad-slot{width:min(1120px,calc(100% - 32px));margin:22px auto;padding:26px;text-decoration:none}.ad-slot strong{display:block;font-size:1.3rem}.ad-slot small{color:var(--muted)}.section{padding:44px 0}.section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:18px}.section h2,.article h2{font-size:2rem;margin:.2rem 0}.tool-grid,.article-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.tool-card,.article-card{padding:18px;text-decoration:none}.tool-card h3{margin:.2rem 0}.tool-card p,.article-card small{color:var(--muted)}.article-card{display:flex;flex-direction:column;gap:8px}.article-card span{color:var(--accent);font-weight:900}.source-links{display:flex;flex-wrap:wrap;gap:10px}.source-links a{border:1px solid var(--line);border-radius:999px;padding:8px 12px;text-decoration:none;color:var(--muted)}.article{padding:56px 0;max-width:860px}.article section{border-top:1px solid var(--line);padding:24px 0}.article table{width:100%;border-collapse:collapse}.article th,.article td{border:1px solid var(--line);padding:12px;text-align:left}.site-footer{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted)}.site-footer div{display:flex;gap:14px}@media(max-width:900px){.hero{grid-template-columns:1fr}.tool-grid,.article-grid{grid-template-columns:repeat(2,1fr)}.section-head,.site-footer{display:block}.nav{align-items:flex-start}.nav-links{flex-wrap:wrap;justify-content:flex-end}}@media(max-width:620px){.tool-grid,.article-grid{grid-template-columns:1fr}.actions{flex-direction:column}.nav{gap:16px;flex-direction:column}.hero{padding-top:36px}.hero h1,.article h1{font-size:2.3rem}}`;
+  return `:root{color-scheme:dark;--bg:#070b14;--panel:#0e1626;--panel2:#121d30;--text:#edf5ff;--muted:#9fb0c3;--line:rgba(255,255,255,.11);--accent:#22d3ee;--radius:10px}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,color-mix(in srgb,var(--accent) 18%,transparent),transparent 32rem),var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.6}a{color:inherit}.site-header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);background:rgba(7,11,20,.82);backdrop-filter:blur(14px)}.nav,.hero,.section,.site-footer,.article{width:min(1120px,calc(100% - 32px));margin:auto}.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 0}.brand{display:flex;gap:12px;align-items:center;text-decoration:none;font-weight:800}.brand small{display:block;color:var(--muted);font-weight:500}.brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#fff);color:#06111f}.nav-links{display:flex;gap:18px;color:var(--muted)}.nav-links a{text-decoration:none}.hero{display:grid;grid-template-columns:1.4fr .8fr;gap:28px;align-items:center;padding:72px 0 34px}.hero h1,.article h1{font-size:clamp(2.2rem,5vw,4.8rem);line-height:1.02;margin:8px 0 18px}.hero p,.lead{font-size:1.08rem;color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.14em;color:var(--accent);font-size:.78rem;font-weight:800}.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:999px;padding:10px 16px;text-decoration:none;font-weight:800;background:rgba(255,255,255,.04)}.button.primary{background:var(--accent);color:#06111f;border-color:transparent}.button.secondary{color:var(--text)}.hero-panel,.tool-card,.article-card,.ad-slot,.proof,.sponsor-card{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));box-shadow:0 24px 70px rgba(0,0,0,.26)}.hero-panel{padding:24px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.chips span{border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--muted)}.ad-slot{width:min(1120px,calc(100% - 32px));margin:22px auto;padding:26px;text-decoration:none}.ad-slot strong{display:block;font-size:1.3rem}.ad-slot small{color:var(--muted)}.section{padding:44px 0}.section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:18px}.section h2,.article h2{font-size:2rem;margin:.2rem 0}.tool-grid,.article-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.sponsor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.tool-card,.article-card,.sponsor-card{padding:18px;text-decoration:none}.tool-card h3,.sponsor-card h3{margin:.2rem 0}.tool-card p,.sponsor-card p,.article-card small{color:var(--muted)}.ad-visual{height:138px;border-radius:8px;margin-bottom:18px;display:grid;place-items:center;background:radial-gradient(circle at 24% 22%,rgba(255,255,255,.42),transparent 28%),linear-gradient(135deg,var(--accent),#172033 64%);overflow:hidden}.ad-visual span{width:74px;height:74px;border-radius:18px;display:grid;place-items:center;background:rgba(7,11,20,.72);border:1px solid rgba(255,255,255,.24);font-size:1.5rem;font-weight:900;letter-spacing:.04em}.article-card{display:flex;flex-direction:column;gap:8px}.article-card span{color:var(--accent);font-weight:900}.source-links{display:flex;flex-wrap:wrap;gap:10px}.source-links a{border:1px solid var(--line);border-radius:999px;padding:8px 12px;text-decoration:none;color:var(--muted)}.article{padding:56px 0;max-width:960px}.article section{border-top:1px solid var(--line);padding:24px 0}.article table{width:100%;border-collapse:collapse}.article th,.article td{border:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}.article code{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:6px;padding:2px 6px}.plan-table th:first-child,.plan-table td:first-child{width:48px;text-align:center;color:var(--accent);font-weight:900}.site-footer{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted)}.site-footer div{display:flex;gap:14px;flex-wrap:wrap}@media(max-width:900px){.hero{grid-template-columns:1fr}.tool-grid,.article-grid,.sponsor-grid{grid-template-columns:repeat(2,1fr)}.section-head,.site-footer{display:block}.nav{align-items:flex-start}.nav-links{flex-wrap:wrap;justify-content:flex-end}.article{max-width:min(960px,calc(100% - 32px));overflow-x:auto}}@media(max-width:620px){.tool-grid,.article-grid,.sponsor-grid{grid-template-columns:1fr}.actions{flex-direction:column}.nav{gap:16px;flex-direction:column}.hero{padding-top:36px}.hero h1,.article h1{font-size:2.3rem}}`;
 }
 
 function robots(site) {
@@ -590,6 +673,7 @@ function sitemap(site) {
   const urls = [
     "",
     "articles/",
+    "keyword-plan.html",
     "about.html",
     "editorial-policy.html",
     "affiliate-disclosure.html",
@@ -619,6 +703,16 @@ function googleVerification() {
   return "google-site-verification: googled161434a101d9810.html\n";
 }
 
+function networkKeywordPlanMarkdown() {
+  const sections = sites.map((site) => {
+    const rows = keywordPlan(site)
+      .map((item, index) => `| ${index + 1} | ${item.keyword} | ${item.intent} | ${item.format} | ${item.priority} | ${baseUrl(site)}/articles/${item.article.slug}.html |`)
+      .join("\n");
+    return `## ${site.name}\n\nSite: ${baseUrl(site)}\n\n| # | Keyword | Intent | Page type | Priority | Current URL |\n|---|---|---|---|---|---|\n${rows}`;
+  }).join("\n\n");
+  return `# AI Niche Sites Keyword Publishing Plan\n\nThis plan lists 20 high-intent keywords per site. Start by improving High priority pages, then use Google Search Console impressions to decide which articles deserve deeper examples, comparison tables, and affiliate calls-to-action.\n\n${sections}\n`;
+}
+
 function generateSite(site) {
   const dir = path.join(outRoot, site.slug);
   cleanDir(dir);
@@ -628,6 +722,7 @@ function generateSite(site) {
   write(path.join(dir, "about.html"), simplePage(site, "about"));
   write(path.join(dir, "editorial-policy.html"), simplePage(site, "editorial"));
   write(path.join(dir, "affiliate-disclosure.html"), simplePage(site, "disclosure"));
+  write(path.join(dir, "keyword-plan.html"), keywordPlanPage(site));
   write(path.join(dir, "robots.txt"), robots(site));
   write(path.join(dir, "sitemap.xml"), sitemap(site));
   write(path.join(dir, "vercel.json"), vercelJson());
@@ -646,6 +741,7 @@ function run() {
     articles: 30,
     tools: site.tools.length
   })), null, 2));
+  write(path.join(root, "keyword-publishing-plan.md"), networkKeywordPlanMarkdown());
   console.log(`Generated ${sites.length} sites, ${sites.length * 30} articles.`);
 }
 

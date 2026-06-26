@@ -26,6 +26,7 @@ for (const site of manifest) {
   exists(path.join(dir, "affiliate-disclosure.html"));
   exists(path.join(dir, "editorial-policy.html"));
   exists(path.join(dir, "about.html"));
+  exists(path.join(dir, "keyword-plan.html"));
 
   const articleDir = path.join(dir, "articles");
   const goDir = path.join(dir, "go");
@@ -39,10 +40,14 @@ for (const site of manifest) {
   if (!home.includes("/_vercel/insights/script.js")) fail(`${site.slug} is missing Vercel Analytics`);
   if (!home.includes("affiliate-disclosure.html")) fail(`${site.slug} is missing disclosure link`);
   if (!home.includes("/go/")) fail(`${site.slug} is missing tracked outbound links`);
+  if (!home.includes("Featured partner placements")) fail(`${site.slug} is missing sponsor cards`);
 
   const sitemap = fs.readFileSync(path.join(dir, "sitemap.xml"), "utf8");
   if (!sitemap.includes(`${site.baseUrl}/articles/`)) fail(`${site.slug} sitemap does not use expected base URL`);
+  if (!sitemap.includes(`${site.baseUrl}/keyword-plan.html`)) fail(`${site.slug} sitemap is missing keyword plan`);
 }
+
+exists(path.join(root, "keyword-publishing-plan.md"));
 
 if (failures > 0) {
   process.exitCode = 1;
