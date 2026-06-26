@@ -1,0 +1,14 @@
+{
+  "name": "ai-niche-sites",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static generator for 12 focused AI niche affiliate websites.",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "validate": "node scripts/validate.js",
+    "check": "npm run build && npm run validate"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

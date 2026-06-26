@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /go/
+
+Sitemap: https://ai-research-tools-hub.vercel.app/sitemap.xml

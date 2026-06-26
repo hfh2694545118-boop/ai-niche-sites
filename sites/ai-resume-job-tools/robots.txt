@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /go/
+
+Sitemap: https://ai-resume-job-tools.vercel.app/sitemap.xml

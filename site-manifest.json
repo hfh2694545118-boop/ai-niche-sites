@@ -1,0 +1,86 @@
+[
+  {
+    "slug": "ai-writing-tools-hub",
+    "name": "AI Writing Tools Hub",
+    "baseUrl": "https://ai-writing-tools-hub.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-video-tools-hub",
+    "name": "AI Video Tools Hub",
+    "baseUrl": "https://ai-video-tools-hub.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-image-tools-hub",
+    "name": "AI Image Tools Hub",
+    "baseUrl": "https://ai-image-tools-hub.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-design-tools-hub",
+    "name": "AI Design Tools Hub",
+    "baseUrl": "https://ai-design-tools-hub.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-coding-tools-hub",
+    "name": "AI Coding Tools Hub",
+    "baseUrl": "https://ai-coding-tools-hub.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-meeting-tools-hub",
+    "name": "AI Meeting Tools Hub",
+    "baseUrl": "https://ai-meeting-tools-hub.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-automation-tools-hub",
+    "name": "AI Automation Tools Hub",
+    "baseUrl": "https://ai-automation-tools-hub.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-customer-support-tools",
+    "name": "AI Customer Support Tools",
+    "baseUrl": "https://ai-customer-support-tools.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-resume-job-tools",
+    "name": "AI Resume & Job Tools",
+    "baseUrl": "https://ai-resume-job-tools.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-learning-tools-hub",
+    "name": "AI Learning Tools Hub",
+    "baseUrl": "https://ai-learning-tools-hub.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-research-tools-hub",
+    "name": "AI Research Tools Hub",
+    "baseUrl": "https://ai-research-tools-hub.vercel.app",
+    "articles": 30,
+    "tools": 8
+  },
+  {
+    "slug": "ai-marketing-tools-hub",
+    "name": "AI Marketing Tools Hub",
+    "baseUrl": "https://ai-marketing-tools-hub.vercel.app",
+    "articles": 30,
+    "tools": 8
+  }
+]

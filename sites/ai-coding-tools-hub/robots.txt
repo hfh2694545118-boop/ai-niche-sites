@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /go/
+
+Sitemap: https://ai-coding-tools-hub.vercel.app/sitemap.xml
