@@ -604,7 +604,7 @@ ${urls.map((url) => `  <url><loc>${baseUrl(site)}/${url}</loc></url>`).join("\n"
 
 function vercelJson() {
   return JSON.stringify({
-    cleanUrls: true,
+    cleanUrls: false,
     trailingSlash: false,
     headers: [
       {
