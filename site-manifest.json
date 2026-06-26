@@ -2,14 +2,14 @@
   {
     "slug": "ai-writing-tools-hub",
     "name": "AI Writing Tools Hub",
-    "baseUrl": "https://ai-writing-tools-hub.vercel.app",
+    "baseUrl": "https://ai-writing-tools-hub-eosin.vercel.app",
     "articles": 30,
     "tools": 8
   },
   {
     "slug": "ai-video-tools-hub",
     "name": "AI Video Tools Hub",
-    "baseUrl": "https://ai-video-tools-hub.vercel.app",
+    "baseUrl": "https://ai-video-tools-hub-orpin.vercel.app",
     "articles": 30,
     "tools": 8
   },
@@ -37,7 +37,7 @@
   {
     "slug": "ai-meeting-tools-hub",
     "name": "AI Meeting Tools Hub",
-    "baseUrl": "https://ai-meeting-tools-hub.vercel.app",
+    "baseUrl": "https://ai-meeting-tools-hub-ashen.vercel.app",
     "articles": 30,
     "tools": 8
   },
@@ -79,7 +79,7 @@
   {
     "slug": "ai-marketing-tools-hub",
     "name": "AI Marketing Tools Hub",
-    "baseUrl": "https://ai-marketing-tools-hub.vercel.app",
+    "baseUrl": "https://ai-marketing-tools-hub-theta.vercel.app",
     "articles": 30,
     "tools": 8
   }

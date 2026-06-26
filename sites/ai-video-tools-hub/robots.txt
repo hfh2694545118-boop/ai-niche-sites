@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /go/
 
-Sitemap: https://ai-video-tools-hub.vercel.app/sitemap.xml
+Sitemap: https://ai-video-tools-hub-orpin.vercel.app/sitemap.xml

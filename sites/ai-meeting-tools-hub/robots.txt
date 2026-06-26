@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /go/
 
-Sitemap: https://ai-meeting-tools-hub.vercel.app/sitemap.xml
+Sitemap: https://ai-meeting-tools-hub-ashen.vercel.app/sitemap.xml

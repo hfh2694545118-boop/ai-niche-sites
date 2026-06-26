@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /go/
 
-Sitemap: https://ai-writing-tools-hub.vercel.app/sitemap.xml
+Sitemap: https://ai-writing-tools-hub-eosin.vercel.app/sitemap.xml

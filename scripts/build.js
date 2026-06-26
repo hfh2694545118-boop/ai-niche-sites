@@ -4,6 +4,13 @@ const path = require("path");
 const root = path.resolve(__dirname, "..");
 const outRoot = path.join(root, "sites");
 
+const domainOverrides = {
+  "ai-writing-tools-hub": "https://ai-writing-tools-hub-eosin.vercel.app",
+  "ai-video-tools-hub": "https://ai-video-tools-hub-orpin.vercel.app",
+  "ai-meeting-tools-hub": "https://ai-meeting-tools-hub-ashen.vercel.app",
+  "ai-marketing-tools-hub": "https://ai-marketing-tools-hub-theta.vercel.app"
+};
+
 const sites = [
   {
     slug: "ai-writing-tools-hub",
@@ -359,7 +366,7 @@ function cleanDir(dir) {
 }
 
 function baseUrl(site) {
-  return `https://${site.slug}.vercel.app`;
+  return domainOverrides[site.slug] || `https://${site.slug}.vercel.app`;
 }
 
 function articleSlug(site, index) {

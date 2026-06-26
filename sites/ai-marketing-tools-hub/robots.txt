@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /go/
 
-Sitemap: https://ai-marketing-tools-hub.vercel.app/sitemap.xml
+Sitemap: https://ai-marketing-tools-hub-theta.vercel.app/sitemap.xml
